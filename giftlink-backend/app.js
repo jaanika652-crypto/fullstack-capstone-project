@@ -11,6 +11,7 @@ const { loadData } = require('./util/import-mongo/index');
 // Route files
 const giftRoutes = require('./routes/giftRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const authRoutes = require('./routes/authRoutes'); // ✅ Step 3: Import authRoutes
 
 const app = express();
 const port = 3060;
@@ -28,8 +29,9 @@ connectToDatabase()
     .catch((e) => console.error('Failed to connect to DB', e));
 
 // Use Routes
-app.use('/api/gifts', giftRoutes);     // Gift-related endpoints
-app.use('/api/search', searchRoutes);  // Search endpoints
+app.use('/api/gifts', giftRoutes);      // Gift-related endpoints
+app.use('/api/search', searchRoutes);   // Search endpoints
+app.use('/api/auth', authRoutes);       // ✅ Step 3: Auth endpoints
 
 // Example route
 app.get("/", (req, res) => {
