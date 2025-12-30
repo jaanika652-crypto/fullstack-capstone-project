@@ -1,19 +1,20 @@
+/* jshint esversion: 8 */
 const express = require('express');
 const router = express.Router();
 const connectToDatabase = require('../models/db');
 const logger = require('../logger');
+const { ObjectId } = require('mongodb');
 
 // Get all gifts
 router.get('/', async (req, res, next) => {
     logger.info('/ called');
     try {
         const db = await connectToDatabase();
-
         const collection = db.collection("gifts");
         const gifts = await collection.find({}).toArray();
         res.json(gifts);
     } catch (e) {
-        logger.console.error('oops something went wrong', e)
+        logger.error('oops something went wrong', e);
         next(e);
     }
 });
@@ -24,7 +25,7 @@ router.get('/:id', async (req, res, next) => {
         const db = await connectToDatabase();
         const collection = db.collection("gifts");
         const id = req.params.id;
-        const gift = await collection.findOne({ id: id });
+        const gift = await collection.findOne({ _id: ObjectId(id) });
 
         if (!gift) {
             return res.status(404).send("Gift not found");
@@ -35,7 +36,6 @@ router.get('/:id', async (req, res, next) => {
         next(e);
     }
 });
-
 
 // Add a new gift
 router.post('/', async (req, res, next) => {
